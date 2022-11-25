@@ -2,7 +2,7 @@ import React from 'react'
 
 const NewsItem = (props)=> {
   
-    let {title, description,imageUrl,newsurl,author,date,source} = props;
+    let {title, description,imageUrl,Url,author,date,source} = props;
 
     return ( 
     <div className='my-3'>
@@ -16,7 +16,7 @@ const NewsItem = (props)=> {
                 <h5 className="card-title">{title}...</h5>
                 <p className="card-text">{description}...</p>
                 <p className="card-text"><small className="text-muted">by {author? author : "unknown"} on {new Date(date).toGMTString()}</small></p>
-                <a href={newsurl} target="_blank" rel="noreferrer" className="btn btn-primary">Read More</a>
+                <a href={Url} target="_blank" rel="noreferrer" className="btn btn-primary">Read More</a>
             </div>
         </div>
     </div>
