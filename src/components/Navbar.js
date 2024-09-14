@@ -1,30 +1,98 @@
-import React from "react"; 
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import PropTypes from "prop-types";
 
-const Navbar = ()=>{
+const Navbar = ({ articles, onSearch }) => {
+  const [menuOpen, setMenuOpen] = useState(false);
 
-    return (
-        <div className="Navbar">
-        <div class="nav">
-           <a className="logo" href="/">NEWS ADDA</a>
-            <div className="nav-items">
-                <div className="search">
-                    <input type="search" class="search-box" placeholder="search news here"/>
-                    <button class="search-btn">Search</button>
-                </div>
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSearch(searchTerm);
+  }
+
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
+  };
+
+  return (
+    <div className="Navbar">
+      <div className="nav">
+        <Link className="logo" to="/">
+          TODAY NEWS
+        </Link>
+        <div className="nav-items">
+          <div className="search">
+            <input
+             onSubmit={handleSubmit}
+              type="search"
+              className="search-box"
+              placeholder="search news here"
+              value={searchTerm}
+          onChange={handleSearchChange}
+            />
+            <button className="search-btn">Search</button>
+          </div>
+          <div
+            className={`menu-icon ${menuOpen ? "open" : ""}`}
+            onClick={toggleMenu}
+          >
+            <div className="bar1"></div>
+            <div className="bar2"></div>
+            <div className="bar3"></div>
+          </div>
         </div>
-        <ul class="links-cointainer">
-        <li className="nav-item"><a className="nav-link " aria-current="page" href="/">Home</a></li>
-        <li className="nav-item"><a className="nav-link" href="/business"> Business</a></li>
-        <li className="nav-item"><a className="nav-link" href="/entertainment">Entertainment </a></li>
-        <li className="nav-item"><a className="nav-link" href="/health">Health </a></li>
-        <li className="nav-item"><a className="nav-link" href="/science">Science</a></li>
-        <li className="nav-item"><a className="nav-link" href="/sports">Sports</a></li>
-        <li className="nav-item"><a className="nav-link" href="/technology">Technology</a></li>
+        <ul className={`links-container ${menuOpen ? "open" : ""}`}>
+          <li className="nav-item">
+            <Link className="nav-link" aria-current="page" to="/">
+              Home
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link className="nav-link" to="/business">
+              Business
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link className="nav-link" to="/entertainment">
+              Entertainment
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link className="nav-link" to="/health">
+              Health
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link className="nav-link" to="/science">
+              Science
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link className="nav-link" to="/sports">
+              Sports
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link className="nav-link" to="/technology">
+              Technology
+            </Link>
+          </li>
         </ul>
-        </div>
+      </div>
     </div>
-        )
-}
+  );
+};
 
 
-export default Navbar
+Navbar.propTypes = {
+  articles: PropTypes.array.isRequired,
+  onSearch: PropTypes.func.isRequired,
+};
+
+export default Navbar;

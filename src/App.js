@@ -1,42 +1,65 @@
-import './App.css';
-import React, { useState } from 'react'
+import React, { useState } from 'react';
+import { BrowserRouter, Route, Routes, useParams } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import News from './components/News';
-import { BrowserRouter,Route,Routes} from "react-router-dom";
-import LoadingBar from 'react-top-loading-bar'
+import SearchResults from './components/SearchResults'; // Import SearchResults
+import LoadingBar from 'react-top-loading-bar';
 
+const App = () => {
+  const pageSize = 10;
+  const apiKey = process.env.apiKey;
+  const [progress, setProgress] = useState(0);
+  const [articles, setArticles] = useState([]); // Store articles in App.js state
 
-const App = ()=>{
-  const pageSize = 6;
-  const apiKey = process.env.REACT_APP_NEWS_API;
-  const [progress, setprogress] = useState(0)
+  const setProgressBar = (value) => {
+    setProgress(value);
+  };
 
-  const setProgess = ()=>{
-    setprogress(progress)
-  }
+  const handleArticlesUpdate = (newArticles) => {
+    setArticles(newArticles); // Update articles
+  };
 
-    return (
-      <div>
+  return (
+    <div>
       <BrowserRouter>
-      <Navbar/>
-      <LoadingBar
-        height={3}
-        color='#f11946'
-        progress={progress}
-      />
+        <Navbar />
+        <LoadingBar height={3} color='#f11946' progress={progress} />
         <Routes>
-          <Route exact path='/' element= {<News setProgress ={setProgess} apiKey={apiKey} key="general" pageSize={pageSize} country="in" category="general"/>} />
-          <Route exact path='/entertainment' element= { <News setProgress ={setProgess} apiKey={apiKey} key="entertainment" pageSize={pageSize} country="in" category="entertainment"/> }/>
-          <Route exact path='/business' element= { <News setProgress ={setProgess} apiKey={apiKey} key="business" pageSize={pageSize} country="in" category="business"/> }/>
-          <Route exact path='/health' element= { <News setProgress ={setProgess} apiKey={apiKey} key="health" pageSize={pageSize} country="in" category="health"/> }/>
-          <Route exact path='/science' element= { <News setProgress ={setProgess} apiKey={apiKey} key="science" pageSize={pageSize} country="in" category="science"/> }/>
-          <Route exact path='/sports' element= { <News setProgress ={setProgess} apiKey={apiKey} key="sports" pageSize={pageSize} country="in" category="sports"/> }/>
-          <Route exact path='/technology' element= { <News setProgress ={setProgess} apiKey={apiKey} key="technology" pageSize={pageSize} country="in" category="technology"/> }/>
+          <Route
+            exact
+            path='/'
+            element={
+              <News 
+                setProgress={setProgressBar} 
+                apiKey={apiKey} 
+                pageSize={pageSize} 
+                country='in' 
+                category='general' 
+                onArticlesUpdate={handleArticlesUpdate} // Pass update function to News
+              />
+            }
+          />
+          <Route path='/:category' element={<CategoryNews />} />
+          <Route path='/search' element={<SearchResults articles={articles} />} /> {/* Search results route */}
         </Routes>
       </BrowserRouter>
-      </div>
-    )
-  
-}
+    </div>
+  );
+};
 
-export default App
+const CategoryNews = () => {
+  const { category } = useParams();
+  const pageSize = 10;
+  const apiKey = process.env.apiKey;
+  const [progress, setProgress] = useState(0);
+
+  const setProgressBar = (value) => {
+    setProgress(value);
+  };
+
+  return (
+    <News setProgress={setProgressBar} apiKey={apiKey} pageSize={pageSize} country='in' category={category} />
+  );
+};
+
+export default App;
